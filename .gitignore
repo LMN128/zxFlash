@@ -1,0 +1,14 @@
+#Exclude all
+
+*
+!*/
+!.gitignore
+
+#Include
+!*.a80
+!*.bat
+!*.tap
+!README.md
+
+
+
