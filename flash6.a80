@@ -146,6 +146,17 @@ range09  push af
          pop  af
  //        ld   bc,#0807
          call T42
+
+;Select element device
+        xor a
+        ld bc,g_ZXi_port0
+        out (c),a
+        inc b
+        in a,(c)         //remember device
+        push af
+        ld a,#01
+        out (c),a        //select 1 - internal device - eLeMeNt ZX
+
 ;ZXi dissable MB03+ machines
         ld a,#00
         ld bc,#703B
@@ -167,14 +178,14 @@ range09  push af
         ld a,#FF	 //HW - FF - Flash firmware
 	out (c),a
 
+
 ;Ultimator enable flash
-        xor a
+        ld a,#10
         ld bc,g_ZXi_port0
         out (c),a
         inc b
-        inc a
-        out (c),a  //select 1 - internal device - eLeMeNt ZX
-
+        ld a,#01
+        out (c),a
         ld a,%01100011   //enable flash and write area0 and 1
         out (#53),a
 /*
@@ -306,6 +317,14 @@ END1    ld   hl,TEXT8
 
         call ANYKEY
 1        
+        xor a           //disable flash
+        out (#53),a
+        ld a,#10
+        ld bc,g_ZXi_port0
+        out (c),a
+        inc b
+        ld a,#00
+        out (c),a
 
         
         ld a,#00
@@ -314,6 +333,14 @@ END1    ld   hl,TEXT8
         pop af
         ld bc,#713B
         out (c),a       //MB03+ - back to previous machine
+
+        
+        xor a
+        ld bc,g_ZXi_port0
+        out (c),a
+        inc b
+        pop af
+        out (c),a  //Back to previous device  1-eLeMeNt ZX; 0-MB03+
 
 END0    ei
         ret        
